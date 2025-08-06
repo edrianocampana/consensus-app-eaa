@@ -1,21 +1,22 @@
 import streamlit as st
 import openai
 
+# Configuração da página
 st.set_page_config(page_title="Detector + Consensus", layout="wide")
 st.title("🔬 Analisador de Discurso Negacionista sobre EAA + Consulta ao Consensus")
 
-openai_api_key = st.text_input("🔑 Sua chave da OpenAI (necessária)", type="password")
+# ✅ A chave é carregada de forma segura via .streamlit/secrets.toml
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 
+# Entrada do usuário
 user_input = st.text_area("✍️ Cole aqui o discurso a ser analisado", height=300)
 
+# Botão de análise
 if st.button("🔍 Analisar e Buscar Evidência"):
-    if not openai_api_key:
-        st.warning("⚠️ Por favor, insira sua chave da OpenAI.")
-    elif not user_input.strip():
+    if not user_input.strip():
         st.warning("⚠️ Por favor, insira um discurso para análise.")
     else:
         with st.spinner("Gerando pergunta científica..."):
-            openai.api_key = openai_api_key
             response = openai.ChatCompletion.create(
                 model="gpt-4",
                 messages=[
